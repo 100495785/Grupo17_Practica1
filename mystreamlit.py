@@ -3,27 +3,21 @@ import pandas as pd
 import joblib
 import numpy as np
 
-# --------------------------------------------------
 # Configuración general
-# --------------------------------------------------
-st.set_page_config(page_title="Predicción de depósito", page_icon="💰")
+st.set_page_config(page_title="Predicción de depósito")
 st.title("Predicción de suscripción a depósito bancario")
 st.write(
     "Aplicación para predecir si un cliente bancario suscribirá un depósito a plazo."
 )
 
-# --------------------------------------------------
 # Cargar modelo
-# --------------------------------------------------
 @st.cache_resource
 def load_model():
     return joblib.load("modelo_final.joblib")
 
 modelo_final = load_model()
 
-# --------------------------------------------------
 # Formulario de entrada
-# --------------------------------------------------
 st.subheader("Introducir datos del cliente")
 
 age = st.number_input("Edad", min_value=18, max_value=100, value=40, step=1)
@@ -79,15 +73,11 @@ poutcome = st.selectbox(
     ["success", "failure", "other", "unknown"]
 )
 
-# --------------------------------------------------
 # Preprocesado coherente con vuestro notebook
-# --------------------------------------------------
 contacted_before = 0 if pdays_input == -1 else 1
 pdays = np.nan if pdays_input == -1 else float(pdays_input)
 
-# --------------------------------------------------
 # Construcción del dataframe de entrada
-# --------------------------------------------------
 input_df = pd.DataFrame([{
     "age": age,
     "job": job,
@@ -111,9 +101,7 @@ input_df = pd.DataFrame([{
 st.write("### Datos introducidos")
 st.dataframe(input_df)
 
-# --------------------------------------------------
 # Predicción
-# --------------------------------------------------
 if st.button("Predecir"):
     pred = modelo_final.predict(input_df)[0]
 
